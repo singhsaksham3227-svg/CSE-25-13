@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Grid Layout</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;           /* allow wrapping to new lines */
+      gap: 20px;                 /* spacing between items */
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .item {
+      flex: 1 1 calc(33.333% - 40px); /* 3 items per row */
+      background-color: #2196F3;
+      color: white;
+      padding: 40px;
+      text-align: center;
+      border-radius: 8px;
+      font-size: 1.2rem;
+    }
+
+    /* Responsive tweak */
+    @media (max-width: 768px) {
+      .item {
+        flex: 1 1 calc(50% - 40px); /* 2 items per row */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .item {
+        flex: 1 1 100%; /* single column */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="item">Item 1</div>
+    <div class="item">Item 2</div>
+    <div class="item">Item 3</div>
+    <div class="item">Item 4</div>
+    <div class="item">Item 5</div>
+    <div class="item">Item 6</div>
+  </div>
+</body>
+</html>
