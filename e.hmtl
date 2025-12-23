@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Sidebar Layout</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;          /* flexbox activated */
+      height: 100vh;          /* full viewport height */
+    }
+
+    .sidebar {
+      flex: 0 0 250px;        /* fixed width sidebar */
+      background-color: #333;
+      color: white;
+      padding: 20px;
+    }
+
+    .content {
+      flex: 1;                /* take remaining space */
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h2>Sidebar</h2>
+      <ul>
+        <li>Home</li>
+        <li>About</li>
+        <li>Contact</li>
+      </ul>
+    </div>
+    <div class="content">
+      <h1>Main Content</h1>
+      <p>This is the main area where your content goes.</p>
+    </div>
+  </div>
+</body>
+</html>
