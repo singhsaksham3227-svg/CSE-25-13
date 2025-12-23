@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Chat UI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ececec;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;   /* stack messages vertically */
+      gap: 10px;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .message {
+      display: flex;
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      font-size: 1rem;
+    }
+
+    .sent {
+      align-self: flex-end;     /* push to right */
+      background-color: #2196F3;
+      color: white;
+    }
+
+    .received {
+      align-self: flex-start;   /* push to left */
+      background-color: #fff;
+      color: #333;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="message received">Hey, how are you?</div>
+    <div class="message sent">I’m good, working on Flexbox layouts!</div>
+    <div class="message received">Nice, show me more examples.</div>
+    <div class="message sent">Sure thing, here’s a chat UI 😉</div>
+  </div>
+</body>
+</html>
