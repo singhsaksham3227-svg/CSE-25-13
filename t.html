@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Sidebar + Content + Footer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column; /* stack main + footer */
+    }
+
+    .main {
+      flex: 1; /* take available space */
+      display: flex; /* sidebar + content side by side */
+    }
+
+    .sidebar {
+      flex: 0 0 250px; /* fixed width */
+      background-color: #333;
+      color: white;
+      padding: 20px;
+    }
+
+    .content {
+      flex: 1; /* remaining space */
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    footer {
+      background-color: #222;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="sidebar">
+      <h2>Sidebar</h2>
+      <ul>
+        <li>Dashboard</li>
+        <li>Reports</li>
+        <li>Settings</li>
+      </ul>
+    </div>
+    <div class="content">
+      <h1>Main Content</h1>
+      <p>This is the content area next to the sidebar.</p>
+    </div>
+  </div>
+  <footer>
+    <p>Footer © 2025</p>
+  </footer>
+</body>
+</html>
