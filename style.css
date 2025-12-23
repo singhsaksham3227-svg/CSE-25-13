@@ -1,0 +1,112 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #fceabb, #f8b500);
+}
+
+/* Main container */
+.container {
+    width: 90%;
+    max-width: 700px;
+    margin: 40px auto;
+    border-radius: 15px;
+    padding: 20px;
+    background: #ffffffcc;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+/* Navigation bar */
+.nav {
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 30px;
+    background: #ff6f61;
+}
+
+.nav a {
+    text-decoration: none;
+    color: white;
+    margin: 0 15px;
+    font-weight: bold;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.nav a:hover {
+    color: #ffd700;
+    transform: scale(1.1);
+}
+
+/* Image grid */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.img-box {
+    height: 150px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+    position: relative;
+}
+
+/* Overlay text in center */
+.img-box span {
+    background: rgba(0,0,0,0.4);
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Set actual images as background */
+.img-box:nth-child(1) { background-image: url('https://source.unsplash.com/random/400x300?nature'); }
+.img-box:nth-child(2) { background-image: url('https://source.unsplash.com/random/400x300?city'); }
+.img-box:nth-child(3) { background-image: url('https://source.unsplash.com/random/400x300?tech'); }
+.img-box:nth-child(4) { background-image: url('https://source.unsplash.com/random/400x300?abstract'); }
+
+.img-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    filter: brightness(0.8);
+}
+
+/* Footer */
+.footer {
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    background: #ffb703;
+}
+
+.footer span {
+    margin: 0 10px;
+    font-weight: bold;
+    color: #370617;
+}
+
+/* Responsive tweaks */
+@media (max-width: 500px) {
+    .nav a {
+        display: block;
+        margin: 8px 0;
+    }
+    .gallery {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}

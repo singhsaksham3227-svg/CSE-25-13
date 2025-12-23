@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OceanView Resort — Booking & Hotel Experience</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    /* --------- Base & Theme --------- */
+    :root {
+      --bg: #f7fafc;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --accent: #10b981;
+      --danger: #ef4444;
+      --warn: #f59e0b;
+      --shadow: 0 10px 25px rgba(0,0,0,0.08);
+      --radius: 14px;
+    }
+    [data-theme="dark"] {
+      --bg: #0b1220;
+      --card: #131a2b;
+      --text: #e5e7eb;
+      --muted: #9aa3b2;
+      --primary: #60a5fa;
+      --accent: #34d399;
+      --danger: #f87171;
+      --warn: #fbbf24;
+      --shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.5;
+    }
+    a { color: var(--primary); text-decoration: none }
+    img { max-width: 100%; border-radius: 10px }
+    .container { width: min(1200px, 92vw); margin: 0 auto; }
+
+    /* --------- Header & Nav --------- */
+    header {
+      position: relative;
+      height: 58vh;
+      min-height: 420px;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(100,100,100,0.1);
+    }
+    #hero-video {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) saturate(1.1);
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.6));
+    }
+    .nav {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 12px; color: #fff;
+      font-weight: 700; letter-spacing: 0.4px;
+    }
+    .brand .logo {
+      width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.9);
+      display: grid; place-items: center; color: var(--primary); font-weight: 800;
+      box-shadow: var(--shadow);
+    }
+    .nav-links {
+      display: flex; gap: 18px; align-items: center;
+    }
+    .nav-links a { color: #fff; opacity: 0.9 }
+    .btn {
+      background: var(--primary); color: #fff; border: none; border-radius: 10px;
+      padding: 10px 14px; cursor: pointer; box-shadow: var(--shadow);
+    }
+    .btn.secondary { background: var(--accent); color: #053a2c }
+    .btn.danger { background: var(--danger) }
+    .btn.outline { background: transparent; border: 1px solid rgba(255,255,255,0.7); color: #fff }
+    .hero-content {
+      position: relative; z-index: 2; margin-top: 10vh; padding: 0 24px; color: #fff;
+    }
+    .hero-content h1 {
+      font-size: clamp(28px, 5vw, 54px); margin: 0 0 8px 0; font-weight: 800;
+    }
+    .hero-content p { max-width: 680px; opacity: 0.9 }
+
+    /* --------- Booking Widget --------- */
+    .booking-bar {
+      position: relative; z-index: 3;
+      background: var(--card);
+      width: min(1100px, 92vw);
+      margin: -40px auto 24px auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px;
+    }
+    .field {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .field label { font-size: 12px; color: var(--muted) }
+    .field input, .field select {
+      padding: 10px; border-radius: 10px; border: 1px solid rgba(120,120,140,0.2);
+      background: transparent; color: var(--text);
+    }
+    .price-inline { font-weight: 700; color: var(--accent) }
+    .book-btn { align-self: end }
+
+    /* --------- Sections --------- */
+    section { padding: 28px 0 }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .grid { display: grid; gap: 18px }
+    .grid.cols-3 { grid-template-columns: repeat(3, 1fr) }
+    .grid.cols-2 { grid-template-columns: repeat(2, 1fr) }
+    .room-card { display: grid; gap: 10px }
+    .room-head { display: flex; align-items: center; justify-content: space-between }
+    .pill { font-size: 12px; padding: 4px 8px; background: rgba(16,185,129,0.12); color: var(--accent); border-radius: 999px }
+    .amenities { display: flex; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 14px }
+    .price-row { display: flex; align-items: center; justify-content: space-between }
+    .flex { display: flex; gap: 12px; align-items: center }
+    .muted { color: var(--muted) }
+    .divider { height: 1px; background: rgba(120,120,140,0.15); margin: 12px 0 }
+
+    /* --------- Wishlist & Chat --------- */
+    .wishlist { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px }
+    .wish-item { min-width: 220px }
+    .chatbot {
+      position: fixed; bottom: 18px; right: 18px; z-index: 20;
+    }
+    .chat-window {
+      width: 320px; max-height: 60vh; overflow: auto;
+      background: var(--card); border-radius: 16px; box-shadow: var(--shadow);
+      display: none; flex-direction: column;
+    }
+    .chat-header {
+      padding: 12px; border-bottom: 1px solid rgba(120,120,140,0.15);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .chat-body { padding: 12px; display: grid; gap: 8px }
+    .msg { padding: 10px; border-radius: 10px }
+    .msg.user { background: rgba(37,99,235,0.15) }
+    .msg.bot { background: rgba(16,185,129,0.15) }
+    .chat-input { display: flex; gap: 8px; padding: 12px; border-top: 1px solid rgba(120,120,140,0.15) }
+
+    /* --------- Modals --------- */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+      display: none; align-items: center; justify-content: center; z-index: 30;
+    }
+    .modal {
+      width: min(520px, 92vw); background: var(--card); border-radius: 16px; box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px }
+
+    /* --------- Footer --------- */
+    footer { padding: 24px 0; color: var(--muted); border-top: 1px solid rgba(120,120,140,0.15) }
+
+    /* --------- Responsive --------- */
+    @media (max-width: 980px) {
+      .booking-bar { grid-template-columns: repeat(2, 1fr) }
+      .grid.cols-3 { grid-template-columns: 1fr 1fr }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none }
+      .booking-bar { grid-template-columns: 1fr }
+      .grid.cols-3, .grid.cols-2 { grid-template-columns: 1fr }
+      header { height: 50vh }
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+  <!-- Header -->
+  <header>
+    <video id="hero-video" autoplay muted loop playsinline>
+      <source src="" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="nav">
+      <div class="brand">
+        <div class="logo">OV</div>
+        <div>OceanView Resort</div>
+      </div>
+      <div class="nav-links">
+        <a href="#rooms">Rooms</a>
+        <a href="#packages">Packages</a>
+        <a href="#events">Events</a>
+        <a href="#map">Map</a>
+        <button class="btn outline" id="themeToggle">Dark/Light</button>
+        <button class="btn" id="loginOpen">Login</button>
+      </div>
+    </div>
+
+    <div class="hero-content container">
+      <h1>Luxury by the sea, tailored to you</h1>
+      <p>Discover suites with panoramic views, curated experiences, and a smart booking engine that finds your best price and perks.</p>
+    </div>
+  </header>
+
+  <!-- Booking Bar -->
+  <div class="booking-bar card">
+    <div class="field">
+      <label>Destination</label>
+      <input type="text" id="dest" placeholder="City or Resort" value="OceanView Resort">
+    </div>
+    <div class="field">
+      <label>Check-in</label>
+      <input type="date" id="checkin">
+    </div>
+    <div class="field">
+      <label>Check-out</label>
+      <input type="date" id="checkout">
+    </div>
+    <div class="field">
+      <label>Guests</label>
+      <select id="guests">
+        <option value="1">1 Guest</option>
+        <option value="2" selected>2 Guests</option>
+        <option value="3">3 Guests</option>
+        <option value="4">4 Guests</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Room type</label>
+      <select id="roomType">
+        <option value="standard">Standard</option>
+        <option value="deluxe">Deluxe</option>
+        <option value="suite" selected>Suite</option>
+        <option value="family">Family</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Currency</label>
+      <select id="currency">
+        <option value="INR" selected>INR ₹</option>
+        <option value="USD">USD $</option>
+        <option value="EUR">EUR €</option>
+      </select>
+    </div>
+    <div class="field book-btn">
+      <button class="btn secondary" id="searchBtn">Search rooms</button>
+    </div>
+  </div>
+
+  <main class="container">
+
+    <!-- Dynamic Price Preview -->
+    <section id="pricepreview" class="card">
+      <div class="flex">
+        <div>
+          <strong>Estimated price</strong> for your selection:
+          <span class="price-inline" id="priceText">—</span>
+        </div>
+        <div class="flex" style="margin-left:auto">
+          <input id="promo" placeholder="Promo code (e.g., OCEAN10)" style="padding:8px;border-radius:10px;border:1px solid rgba(120,120,140,0.2)">
+          <button class="btn" id="applyPromo">Apply</button>
+        </div>
+      </div>
+      <div class="muted" id="priceNote">Prices auto-adjust based on season, demand, and promotions.</div>
+    </section>
+
+    <!-- Rooms -->
+    <section id="rooms">
+      <h2>Available rooms</h2>
+      <div class="grid cols-3" id="roomGrid">
+        <!-- Rooms populated by JS -->
+      </div>
+    </section>
+
+    <!-- Wishlist -->
+    <section id="wishlist" class="card">
+      <h3>Your wishlist</h3>
+      <div class="wishlist" id="wishlistRow"></div>
+      <div class="flex">
+        <span class="muted">Save rooms to compare or book later.</span>
+        <button class="btn danger" id="clearWishlist" style="margin-left:auto">Clear wishlist</button>
+      </div>
+    </section>
+
+    <!-- Packages -->
+    <section id="packages">
+      <h2>Handpicked packages</h2>
+      <div class="grid cols-3">
+        <div class="card">
+          <div class="room-card">
+            <img src="" alt="Honeymoon escape" id="imgPkg1">
+            <div class="room-head">
+              <h3>Honeymoon Escape</h3><span class="pill">Save 15%</span>
+            </div>
+            <p class="muted">Suite + candlelight dinner + spa for two + late checkout.</p>
+            <div class="price-row">
+              <span><strong>Package:</strong> from <span class="price-inline" id="pkg1Price">₹—</span></span>
+              <button class="btn" data-package="honeymoon">Add to booking</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="room-card">
+            <img src="" alt="Family fun" id="imgPkg2">
+            <div class="room-head">
+              <h3>Family Fun</h3><span class="pill">Kids eat free</span>
+            </div>
+            <p class="muted">Family room + breakfast + kids club + airport pickup.</p>
+            <div class="price-row">
+              <span><strong>Package:</strong> from <span class="price-inline" id="pkg2Price">₹—</span></span>
+              <button class="btn" data-package="family">Add to booking</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="room-card">
+            <img src="" alt="Work & unwind" id="imgPkg3">
+            <div class="room-head">
+              <h3>Work & Unwind</h3><span class="pill">Business perks</span>
+            </div>
+            <p class="muted">Deluxe room + cowork lounge + airport transfer + 2 spa passes.</p>
+            <div class="price-row">
+              <span><strong>Package:</strong> from <span class="price-inline" id="pkg3Price">₹—</span></span>
+              <button class="btn" data-package="work">Add to booking</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Events -->
+    <section id="events">
+      <h2>Resort events</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Sunset Jazz — Every Friday</h3>
+          <p class="muted">Live jazz at the ocean terrace. Complimentary welcome drink for in-house guests.</p>
+          <div class="flex">
+            <span>Next: <strong id="nextJazz">—</strong></span>
+            <button class="btn" id="remindJazz" style="margin-left:auto">Set reminder</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Chef’s Table — Monthly</h3>
+          <p class="muted">Eight-course tasting with our executive chef. Limited seats.</p>
+          <div class="flex">
+            <span>Next: <strong id="nextChef">—</strong></span>
+            <button class="btn" id="remindChef" style="margin-left:auto">Set reminder</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Weather & Tips -->
+    <section id="weather" class="card">
+      <h3>Weather & travel tips</h3>
+      <div class="grid cols-3">
+        <div>
+          <div class="muted">Current (mock):</div>
+          <div id="weatherNow"><strong>29°C</strong>, Partly cloudy, Light breeze</div>
+        </div>
+        <div>
+          <div class="muted">Best time:</div>
+          <div>October–March for mild weather and clear sunsets.</div>
+        </div>
+        <div>
+          <div class="muted">Packing tip:</div>
+          <div>Light layers, sunscreen, and evening wear for events.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Map -->
+    <section id="map">
+      <h2>Find us</h2>
+      <div class="card">
+        <div class="grid cols-2">
+          <div>
+            <p>OceanView Resort, Seaside Road, Goa, India</p>
+            <p class="muted">Near beaches, nightlife, and heritage sites.</p>
+            <div class="divider"></div>
+            <div class="flex">
+              <button class="btn" id="openDirections">Get directions</button>
+              <button class="btn outline" id="shareLocation">Share location</button>
+            </div>
+          </div>
+          <div>
+            <!-- Replace with actual map embed if desired -->
+            <img src="" alt="Map placeholder" id="imgMap">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <h2>Frequently asked</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <strong>Is early check-in allowed?</strong>
+          <p class="muted">Yes, subject to availability. Add a note during booking.</p>
+        </div>
+        <div class="card">
+          <strong>Do you offer airport transfers?</strong>
+          <p class="muted">Yes, included in select packages or as an add-on.</p>
+        </div>
+        <div class="card">
+          <strong>Can I cancel my booking?</strong>
+          <p class="muted">Flexible up to 48 hours before check-in. See policy at checkout.</p>
+        </div>
+        <div class="card">
+          <strong>Is breakfast included?</strong>
+          <p class="muted">Included with Deluxe, Suite, and Family packages.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Checkout Summary -->
+    <section id="summary" class="card">
+      <h3>Your booking summary</h3>
+      <div id="summaryContent" class="muted">Select dates and a room to see your full summary here.</div>
+      <div class="flex" style="margin-top:12px">
+        <button class="btn" id="openCheckout">Proceed to checkout</button>
+        <span class="muted" id="loyaltyText" style="margin-left:auto">Join our loyalty program to unlock room upgrades.</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="container">
+    <div class="flex">
+      <div>&copy; 2025 OceanView Resort</div>
+      <div style="margin-left:auto">Privacy · Terms · Contact</div>
+    </div>
+  </footer>
+
+  <!-- Chatbot -->
+  <div class="chatbot">
+    <button class="btn" id="chatToggle">Ask Concierge</button>
+    <div class="chat-window" id="chatWindow">
+      <div class="chat-header">
+        <strong>Concierge</strong>
+        <button class="btn outline" id="chatClose">Close</button>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <div class="msg bot">Hi! I can suggest rooms, packages, and perks. Try: “Best room for 2 adults in November.”</div>
+      </div>
+      <div class="chat-input">
+        <input id="chatInput" placeholder="Type your question..." style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(120,120,140,0.2)">
+        <button class="btn" id="chatSend">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal-backdrop" id="loginModal">
+    <div class="modal">
+      <div class="modal-header">
+        <strong>Login to OceanView</strong>
+        <button class="btn outline" id="loginClose">Close</button>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="••••••••">
+      </div>
+      <div class="flex" style="margin-top:12px">
+        <button class="btn" id="loginSubmit">Login</button>
+        <span class="muted" style="margin-left:auto">No account? We'll create one automatically.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal-backdrop" id="checkoutModal">
+    <div class="modal">
+      <div class="modal-header">
+        <strong>Checkout</strong>
+        <button class="btn outline" id="checkoutClose">Close</button>
+      </div>
+      <div id="checkoutDetails" class="muted">Your selection will appear here.</div>
+      <div class="divider"></div>
+      <div class="grid cols-2">
+        <div>
+          <div class="field">
+            <label>Full name</label>
+            <input id="fullName" placeholder="First Last">
+          </div>
+          <div class="field">
+            <label>Phone</label>
+            <input id="phone" placeholder="+91 98765 43210">
+          </div>
+          <div class="field">
+            <label>Special requests</label>
+            <input id="requests" placeholder="e.g., late check-in">
+          </div>
+        </div>
+        <div>
+          <div class="field">
+            <label>Payment method</label>
+            <select id="payMethod">
+              <option value="card" selected>Credit/Debit card</option>
+              <option value="upi">UPI</option>
+              <option value="paypal">PayPal</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Card/UPI ID</label>
+            <input id="payId" placeholder="4111 1111 1111 1111 / your@upi">
+          </div>
+          <div class="field">
+            <label>Apply loyalty points</label>
+            <select id="loyaltyApply">
+              <option value="0" selected>Do not apply</option>
+              <option value="500">Use 500 pts (₹500)</option>
+              <option value="1000">Use 1000 pts (₹1000)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="flex" style="margin-top:12px">
+        <button class="btn secondary" id="confirmPay">Confirm & pay</button>
+        <span class="muted" style="margin-left:auto" id="checkoutNote">Secure mock checkout. No real payment processed.</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -------------- Helper & State --------------
+    const INR = 1, USD = 0.012, EUR = 0.011; // simple mock rates
+    const state = {
+      checkin: null, checkout: null, nights: 0,
+      guests: 2, roomType: 'suite', currency: 'INR',
+      baseRates: { standard: 3500, deluxe: 5200, suite: 7800, family: 6800 }, // per night INR
+      demandFactor: 1.0,
+      promo: null,
+      wishlist: JSON.parse(localStorage.getItem('wishlist') || '[]'),
+      selection: null,
+      loyaltyPoints: 300 // mock user points
+    };
+
+    const fmt = (amt, cur='INR') => {
+      const r = cur==='INR'?INR:cur==='USD'?USD:EUR;
+      const v = Math.round(amt * r);
+      const s = cur==='INR' ? `₹${v}` : cur==='USD' ? `$${v}` : `€${v}`;
+      return s;
+    };
+
+    const parseDate = (val) => val ? new Date(val + 'T12:00:00') : null;
+    const daysBetween = (a,b) => Math.max(0, Math.round((b - a) / (1000*60*60*24)));
+
+    const setHeroMedia = () => {
+      // lightweight placeholder images (empty srcs by default). You can replace with real assets.
+      document.querySelector('#imgPkg1').src = 'https://images.unsplash.com/photo-1501117716987-c8e3f525e0d1?q=80&w=1000&auto=format&fit=crop';
+      document.querySelector('#imgPkg2').src = 'https://images.unsplash.com/photo-1606046604972-c7f7b6d1f9ca?q=80&w=1000&auto=format&fit=crop';
+      document.querySelector('#imgPkg3').src = 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1000&auto=format&fit=crop';
+      document.querySelector('#imgMap').src = 'https://images.unsplash.com/photo-1463100099107-aa0980c465d0?q=80&w=1200&auto=format&fit=crop';
+      const vid = document.getElementById('hero-video');
+      vid.src = 'https://cdn.coverr.co/videos/coverr-sunrise-over-the-sea-1661/1080p.mp4'; // Free stock loop
+    };
+
+    // -------------- Booking Logic --------------
+    const updateSelectionFromForm = () => {
+      const ci = parseDate(document.getElementById('checkin').value);
+      const co = parseDate(document.getElementById('checkout').value);
+      state.checkin = ci; state.checkout = co;
+      state.nights = (ci && co) ? daysBetween(ci, co) : 0;
+      state.guests = parseInt(document.getElementById('guests').value, 10);
+      state.roomType = document.getElementById('roomType').value;
+      state.currency = document.getElementById('currency').value;
+      // Simple demand model: weekends & peak months
+      const m = ci ? ci.getMonth()+1 : 0;
+      const weekendBoost = (ci && [5,6].includes(ci.getDay())) ? 1.12 : 1.0;
+      const peak = (m>=11 || m<=2) ? 1.18 : 1.0; // Nov–Feb peak
+      state.demandFactor = weekendBoost * peak;
+    };
+
+    const priceFor = (roomType, nights, guests) => {
+      let base = state.baseRates[roomType] || 4000;
+      // guest increment beyond 2
+      if (guests > 2) base += (guests - 2) * 600;
+      let total = base * Math.max(1, nights) * state.demandFactor;
+      // promo codes
+      if (state.promo === 'OCEAN10') total *= 0.90;
+      if (state.promo === 'SUITE5' && roomType === 'suite') total *= 0.95;
+      return Math.round(total);
+    };
+
+    const renderPricePreview = () => {
+      const t = document.getElementById('priceText');
+      const n = state.nights || 1;
+      const p = priceFor(state.roomType, n, state.guests);
+      t.textContent = fmt(p, state.currency) + ` (${n} night${n>1?'s':''}, ${state.roomType})`;
+      document.getElementById('priceNote').textContent =
+        `Includes seasonal demand factor ×${state.demandFactor.toFixed(2)}${state.promo ? ` and promo ${state.promo}` : ''}.`;
+    };
+
+    // -------------- Rooms Grid --------------
+    const rooms = [
+      { id:'r1', name:'Standard Garden', type:'standard', beds:'Queen', view:'Garden', amenities:['Wi‑Fi','Breakfast','AC'], img:'https://images.unsplash.com/photo-1560067174-894cb4f3df1a?q=80&w=1000&auto=format&fit=crop' },
+      { id:'r2', name:'Deluxe Sea', type:'deluxe', beds:'King', view:'Sea', amenities:['Wi‑Fi','Breakfast','Balcony','AC'], img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop' },
+      { id:'r3', name:'Premier Suite', type:'suite', beds:'King', view:'Panoramic', amenities:['Wi‑Fi','Breakfast','Living area','Bathtub'], img:'https://images.unsplash.com/photo-1555006304-49f05f0d8402?q=80&w=1000&auto=format&fit=crop' },
+      { id:'r4', name:'Family Comfort', type:'family', beds:'2 Queen', view:'Courtyard', amenities:['Wi‑Fi','Breakfast','Kids club','AC'], img:'https://images.unsplash.com/photo-1551907234-8f22f95f6c07?q=80&w=1000&auto=format&fit=crop' },
+      { id:'r5', name:'Deluxe Corner', type:'deluxe', beds:'King', view:'Sea & City', amenities:['Wi‑Fi','Breakfast','Lounge access'], img:'https://images.unsplash.com/photo-1521783986064-7fe4de5d0f57?q=80&w=1000&auto=format&fit=crop' },
+      { id:'r6', name:'Signature Suite', type:'suite', beds:'King', view:'Oceanfront', amenities:['Wi‑Fi','Breakfast','Jacuzzi','Private terrace'], img:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1000&auto=format&fit=crop' },
+    ];
+
+    const renderRooms = () => {
+      const grid = document.getElementById('roomGrid');
+      grid.innerHTML = '';
+      rooms.forEach(r => {
+        const nights = state.nights || 1;
+        const price = priceFor(r.type, nights, state.guests);
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.innerHTML = `
+          <div class="room-card">
+            <img src="${r.img}" alt="${r.name}">
+            <div class="room-head">
+              <h3>${r.name}</h3>
+              <span class="pill">${r.view} view</span>
+            </div>
+            <div class="amenities">${r.amenities.map(a=>`<span>• ${a}</span>`).join(' ')}</div>
+            <div class="divider"></div>
+            <div class="price-row">
+              <div>
+                <div class="muted">${r.beds} bed · ${state.guests} guest(s) · ${state.nights||1} night(s)</div>
+                <div><strong>${fmt(price, state.currency)}</strong> total</div>
+              </div>
+              <div class="flex">
+                <button class="btn outline" data-wish="${r.id}">Save</button>
+                <button class="btn" data-book="${r.id}">Book</button>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(el);
+      });
+    };
+
+    // -------------- Wishlist --------------
+    const renderWishlist = () => {
+      const row = document.getElementById('wishlistRow');
+      row.innerHTML = '';
+      if (!state.wishlist.length) {
+        row.innerHTML = '<div class="muted">No items yet. Click “Save” on any room.</div>';
+        return;
+      }
+      state.wishlist.forEach(id => {
+        const r = rooms.find(x=>x.id===id);
+        if (!r) return;
+        const nights = state.nights || 1;
+        const price = priceFor(r.type, nights, state.guests);
+        const el = document.createElement('div');
+        el.className = 'card wish-item';
+        el.innerHTML = `
+          <img src="${r.img}" alt="${r.name}">
+          <strong>${r.name}</strong>
+          <div class="muted">${r.beds} · ${r.view}</div>
+          <div><span class="price-inline">${fmt(price, state.currency)}</span></div>
+          <div class="flex">
+            <button class="btn" data-book="${r.id}">Book</button>
+            <button class="btn danger" data-remove="${r.id}" style="margin-left:auto">Remove</button>
+          </div>
+        `;
+        row.appendChild(el);
+      });
+      localStorage.setItem('wishlist', JSON.stringify(state.wishlist));
+    };
+
+    // -------------- Packages --------------
+    const renderPackagePrices = () => {
+      // Base off current nights/guests; include package add-ons
+      const n = state.nights || 1, g = state.guests;
+      const honeyBase = priceFor('suite', n, g);
+      const famBase = priceFor('family', n, g);
+      const workBase = priceFor('deluxe', n, g);
+      document.getElementById('pkg1Price').textContent = fmt(Math.round(honeyBase * 0.85), state.currency);
+      document.getElementById('pkg2Price').textContent = fmt(Math.round(famBase * 0.92), state.currency);
+      document.getElementById('pkg3Price').textContent = fmt(Math.round(workBase * 0.90), state.currency);
+    };
+
+    // -------------- Events --------------
+    const nextFriday = () => {
+      const d = new Date(); const day = d.getDay();
+      const diff = (5 - day + 7) % 7 || 7; // Friday
+      d.setDate(d.getDate() + diff);
+      return d.toDateString();
+    };
+    const nextMonthDate = () => {
+      const d = new Date();
+      d.setMonth(d.getMonth()+1);
+      d.setDate(12);
+      return d.toDateString();
+    };
+
+    // -------------- Chatbot (Rule-based) --------------
+    const botReply = (text) => {
+      const t = text.toLowerCase();
+      if (t.includes('best room') || t.includes('recommend')) {
+        const month = (state.checkin?.getMonth() ?? new Date().getMonth()) + 1;
+        const rec = (month===11 || month<=2) ? 'Premier Suite for panoramic winter sunsets' : 'Deluxe Sea for breezy views';
+        return `For ${state.guests} guest(s) and ${state.nights||1} night(s), try the ${rec}.`;
+      }
+      if (t.includes('promo')) return 'Try OCEAN10 for 10% off, or SUITE5 for 5% off suites.';
+      if (t.includes('breakfast')) return 'Breakfast is included with Deluxe, Suite, and Family rooms and most packages.';
+      if (t.includes('upgrade')) return 'Join loyalty to unlock complimentary upgrades on low-occupancy days.';
+      if (t.includes('events')) return `Next events: Sunset Jazz on ${nextFriday()} and Chef’s Table on ${nextMonthDate()}.`;
+      return 'I can help with rooms, packages, promos, events, and upgrades. Ask me anything!';
+    };
+
+    // -------------- Summary & Checkout --------------
+    const renderSummary = () => {
+      if (!state.selection) {
+        document.getElementById('summaryContent').innerHTML = 'Select a room to see summary.';
+        return;
+      }
+      const { roomId, package } = state.selection;
+      const r = rooms.find(x=>x.id===roomId);
+      const n = state.nights || 1;
+      let total = priceFor(r.type, n, state.guests);
+      let pkgText = 'None';
+      if (package==='honeymoon') { total = Math.round(total * 0.85); pkgText = 'Honeymoon Escape (-15%)'; }
+      if (package==='family') { total = Math.round(total * 0.92); pkgText = 'Family Fun (-8%)'; }
+      if (package==='work') { total = Math.round(total * 0.90); pkgText = 'Work & Unwind (-10%)'; }
+      const lines = [
+        `<strong>Room:</strong> ${r.name} (${r.type})`,
+        `<strong>Dates:</strong> ${state.checkin ? state.checkin.toDateString() : '—'} → ${state.checkout ? state.checkout.toDateString() : '—'} (${n} night${n>1?'s':''})`,
+        `<strong>Guests:</strong> ${state.guests}`,
+        `<strong>Package:</strong> ${pkgText}`,
+        `<strong>Promo:</strong> ${state.promo || 'None'}`,
+        `<strong>Total:</strong> ${fmt(total, state.currency)}`
+      ];
+      document.getElementById('summaryContent').innerHTML = lines.map(l=>`<div>${l}</div>`).join('');
+    };
+
+    const openCheckout = () => {
+      if (!state.selection) { alert('Select a room first.'); return; }
+      document.getElementById('checkoutModal').style.display = 'flex';
+      const { roomId, package } = state.selection;
+      const r = rooms.find(x=>x.id===roomId);
+      const n = state.nights || 1;
+      let total = priceFor(r.type, n, state.guests);
+      if (package==='honeymoon') total = Math.round(total * 0.85);
+      if (package==='family') total = Math.round(total * 0.92);
+      if (package==='work') total = Math.round(total * 0.90);
+      document.getElementById('checkoutDetails').innerHTML = `
+        <div><strong>${r.name}</strong> for ${state.guests} guest(s), ${n} night(s)</div>
+        <div>Package: ${package || 'None'} | Promo: ${state.promo || 'None'}</div>
+        <div>Total: <strong>${fmt(total, state.currency)}</strong></div>
+      `;
+    };
+
+    const confirmPay = () => {
+      const name = document.getElementById('fullName').value.trim();
+      const payId = document.getElementById('payId').value.trim();
+      if (!name || !payId) { alert('Please fill name and payment ID.'); return; }
+      alert(`Payment successful (mock). Thank you, ${name}! A confirmation email will be sent.`);
+      document.getElementById('checkoutModal').style.display = 'none';
+      // Earn some loyalty points
+      state.loyaltyPoints += 200;
+      document.getElementById('loyaltyText').textContent = `You now have ${state.loyaltyPoints} pts. Unlock upgrades sooner.`;
+    };
+
+    // -------------- Init & Event Listeners --------------
+    window.addEventListener('DOMContentLoaded', () => {
+      setHeroMedia();
+      // Set default dates: tomorrow to day after
+      const today = new Date(); const t1 = new Date(today); t1.setDate(today.getDate()+1);
+      const t2 = new Date(today); t2.setDate(today.getDate()+2);
+      document.getElementById('checkin').value = t1.toISOString().slice(0,10);
+      document.getElementById('checkout').value = t2.toISOString().slice(0,10);
+
+      document.getElementById('nextJazz').textContent = nextFriday();
+      document.getElementById('nextChef').textContent = nextMonthDate();
+
+      updateSelectionFromForm();
+      renderPricePreview();
+      renderRooms();
+      renderWishlist();
+      renderPackagePrices();
+
+      // Theme
+      document.getElementById('themeToggle').addEventListener('click', () => {
+        const cur = document.body.getAttribute('data-theme');
+        document.body.setAttribute('data-theme', cur==='dark' ? 'light' : 'dark');
+      });
+
+      // Booking inputs
+      ['checkin','checkout','guests','roomType','currency'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+          updateSelectionFromForm();
+          renderPricePreview();
+          renderRooms();
+          renderWishlist();
+          renderPackagePrices();
+          renderSummary();
+        });
+      });
+
+      // Promo
+      document.getElementById('applyPromo').addEventListener('click', () => {
+        const code = document.getElementById('promo').value.trim().toUpperCase();
+        if (!code) { state.promo = null; renderPricePreview(); renderRooms(); renderPackagePrices(); renderSummary(); return; }
+        if (['OCEAN10','SUITE5'].includes(code)) {
+          state.promo = code;
+          renderPricePreview(); renderRooms(); renderPackagePrices(); renderSummary();
+          alert(`Applied promo: ${code}`);
+        } else {
+          alert('Invalid promo code');
+        }
+      });
+
+      // Search (just re-render in this demo)
+      document.getElementById('searchBtn').addEventListener('click', () => {
+        updateSelectionFromForm();
+        renderRooms(); renderPricePreview(); renderSummary();
+      });
+
+      // Room actions (delegation)
+      document.getElementById('roomGrid').addEventListener('click', (e) => {
+        const w = e.target.getAttribute('data-wish');
+        const b = e.target.getAttribute('data-book');
+        if (w) {
+          if (!state.wishlist.includes(w)) state.wishlist.push(w);
+          renderWishlist();
+        }
+        if (b) {
+          state.selection = { roomId: b, package: state.selection?.package || null };
+          renderSummary();
+          window.scrollTo({ top: document.getElementById('summary').offsetTop - 20, behavior: 'smooth' });
+        }
+      });
+
+      // Wishlist actions
+      document.getElementById('wishlistRow').addEventListener('click', (e) => {
+        const rem = e.target.getAttribute('data-remove');
+        const book = e.target.getAttribute('data-book');
+        if (rem) {
+          state.wishlist = state.wishlist.filter(x=>x!==rem);
+          renderWishlist();
+        }
+        if (book) {
+          state.selection = { roomId: book, package: state.selection?.package || null };
+          renderSummary();
+        }
+      });
+      document.getElementById('clearWishlist').addEventListener('click', () => {
+        state.wishlist = []; renderWishlist();
+      });
+
+      // Packages add
+      document.querySelectorAll('[data-package]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const pkg = btn.getAttribute('data-package');
+          if (!state.selection) alert('Select a room first.');
+          else {
+            state.selection.package = pkg;
+            renderSummary();
+            alert(`Package added: ${pkg}`);
+          }
+        });
+      });
+
+      // Events reminders
+      document.getElementById('remindJazz').addEventListener('click', () => alert('Reminder set for Sunset Jazz (mock).'));
+      document.getElementById('remindChef').addEventListener('click', () => alert('Reminder set for Chef’s Table (mock).'));
+
+      // Map actions
+      document.getElementById('openDirections').addEventListener('click', () => alert('Opening directions (mock).'));
+      document.getElementById('shareLocation').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText('OceanView Resort, Goa, India');
+          alert('Location copied to clipboard!');
+        } catch { alert('Copy failed; please copy manually.'); }
+      });
+
+      // Chatbot
+      const chatWindow = document.getElementById('chatWindow');
+      document.getElementById('chatToggle').addEventListener('click', () => {
+        chatWindow.style.display = chatWindow.style.display==='flex' ? 'none' : 'flex';
+        chatWindow.style.flexDirection = 'column';
+      });
+      document.getElementById('chatClose').addEventListener('click', () => chatWindow.style.display = 'none');
+      document.getElementById('chatSend').addEventListener('click', () => {
+        const input = document.getElementById('chatInput');
+        const txt = input.value.trim();
+        if (!txt) return;
+        const body = document.getElementById('chatBody');
+        const u = document.createElement('div'); u.className='msg user'; u.textContent = txt; body.appendChild(u);
+        const b = document.createElement('div'); b.className='msg bot'; b.textContent = botReply(txt); body.appendChild(b);
+        input.value = ''; body.scrollTop = body.scrollHeight;
+      });
+
+      // Login
+      document.getElementById('loginOpen').addEventListener('click', () => document.getElementById('loginModal').style.display = 'flex');
+      document.getElementById('loginClose').addEventListener('click', () => document.getElementById('loginModal').style.display = 'none');
+      document.getElementById('loginSubmit').addEventListener('click', () => {
+        const email = document.getElementById('loginEmail').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
+        if (!email || !pass) { alert('Enter email and password.'); return; }
+        alert('Logged in (mock). Loyalty perks activated.');
+        document.getElementById('loginModal').style.display = 'none';
+        state.loyaltyPoints = Math.max(state.loyaltyPoints, 500);
+        document.getElementById('loyaltyText').textContent = `Welcome back! You have ${state.loyaltyPoints} pts. Upgrades unlocked.`;
+      });
+
+      // Checkout
+      document.getElementById('openCheckout').addEventListener('click', openCheckout);
+      document.getElementById('checkoutClose').addEventListener('click', () => document.getElementById('checkoutModal').style.display = 'none');
+      document.getElementById('confirmPay').addEventListener('click', confirmPay);
+
+      // Loyalty apply impacts (mock)
+      document.getElementById('loyaltyApply').addEventListener('change', () => {
+        const val = parseInt(document.getElementById('loyaltyApply').value, 10);
+        document.getElementById('checkoutNote').textContent = val ? `Applying ${val} pts discount (mock).` : 'Secure mock checkout. No real payment processed.';
+      });
+    });
+  </script>
+</body>
+</html>

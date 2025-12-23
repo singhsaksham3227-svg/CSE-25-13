@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Basic Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body Styling */
+body {
+    background-color: #f4f6f8;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Form Container */
+form {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Form Title */
+p {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #111b4f;
+    font-weight: bold;
+}
+
+/* Form Fields */
+form div {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #555;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input:focus,
+select:focus {
+    border-color: #0078d7;
+    outline: none;
+}
+
+/* Submit Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0078d7;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #005fa3;
+}
+    </style>
+</head>
+<body>
+    <h1>TICKET BOOKING</h1>
+    <form action="/submit.php">
+        <div>
+            <label for="name">name</label>
+            <input id="name" type="text" placeholder="enter passenger name" required>
+        </div>
+        <div>
+            <label for="gender">gender</label>
+            <select id="gender" required>
+                <option value="" disabled selected>select gender</option>
+                <option value="male">male</option>
+                <option value="female">female</option>
+                <option value="kinner">kinner</option>
+            </select>
+        </div>
+        <div>
+            <label for="age">age</label>
+            <input id="age" type="number" placeholder="enter ur age">
+        </div>
+        <div>
+            <label for="phone">phone</label>
+            <input id="phone" type="tel" placeholder="enter ur phone no." required>
+
+        </div>
+        <div>
+            <label for="email">email</label>
+            <input id="email" type="email" placeholder="enter ur email" required>
+        </div>
+        <div>
+            <label for="address">address</label>
+            <textarea name="address" id="address" placeholder="enter ur address" rows="7"></textarea>
+        </div>
+        <div>
+            <button type="submit">submit</button>
+        </div>
+
+    </form>
+</body>
+</html>

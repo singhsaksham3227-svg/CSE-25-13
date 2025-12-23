@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>student registration</title>
+</head>
+<body>
+    <h1>Student Registration Form</h1>
+    <form action="/submit_registration" method="post">
+        <p>
+            <label for="name"> Name:</label><br>
+            <input type="text" id="name" name="name" required>
+        </p>
+        <p>
+            <label for="email"> Email:</label><br>
+            <input type="email" id="email" name="email" required>
+        </p>
+        <p>
+            <label for="password"> Password:</label><br>
+            <input type="password" id="password" name="password" required>
+        </p>
+        <p>
+            <label>gender</label>
+            <input type="radio" id="male" name="gender" value="male">male
+           <input type="radio" id="female" name="gender" value="female">female
+        </p>
+        <p>
+            <label for="course"> Course:</label><br>
+            <select  name="course" required>
+                <option value="">select</option>
+                <option value="btech">btech</option>
+                <option value="mba">MBA</option>
+                <option value="mca">mba</option>
+            </select> 
+        </p>
+        <p>
+            <label for="address"> Address:</label><br>
+            <textarea id="address" name="address" rows="4" cols="50" required></textarea>
+        </p>    
+        <p>
+            <input type="submit" value="Register">
+
+        </p>
+        <p align="center">
+            &copy; 2025 Student Registration
+        </p>
+    </form>
+</body>
+</html>

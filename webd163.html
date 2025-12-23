@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Aurora Grand — Full-Stack-like Hotel Booking (Front-end Demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{
+      --bg:#0f172a;--card:#111827;--text:#e5e7eb;--muted:#9ca3af;--primary:#60a5fa;--accent:#34d399;--danger:#ef4444;--warn:#f59e0b;
+      --shadow:0 12px 30px rgba(0,0,0,.35);--radius:14px;--ring:0 0 0 2px rgba(96,165,250,.5)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#0f172a,#0b1320);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial;line-height:1.5}
+    a{color:var(--primary);text-decoration:none}
+    img{max-width:100%;border-radius:10px}
+    .container{width:min(1280px,92vw);margin:0 auto}
+    header{position:relative;height:60vh;min-height:460px;overflow:hidden;border-bottom:1px solid #1f2937}
+    #hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.55) saturate(1.1)}
+    .hero-overlay{position:absolute;inset:0;background:radial-gradient(90% 70% at 10% 10%,rgba(96,165,250,.4),transparent 70%),linear-gradient(180deg,rgba(0,0,0,.4),rgba(0,0,0,.7))}
+    .nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:16px 24px}
+    .brand{display:flex;align-items:center;gap:12px;color:#fff;font-weight:800;letter-spacing:.4px}
+    .logo{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.9);display:grid;place-items:center;color:#0f172a;box-shadow:var(--shadow)}
+    .nav-links{display:flex;gap:18px;align-items:center}
+    .nav-links a{color:#fff;opacity:.9}
+    .btn{background:var(--primary);color:#041022;border:none;border-radius:12px;padding:10px 14px;cursor:pointer;box-shadow:var(--shadow)}
+    .btn:hover{filter:brightness(1.05)}
+    .btn.secondary{background:var(--accent);color:#052014}
+    .btn.danger{background:var(--danger);color:#fff}
+    .btn.warn{background:var(--warn);color:#0f172a}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.7);color:#fff}
+    .hero-content{position:relative;z-index:2;margin-top:12vh;padding:0 24px;color:#fff}
+    .hero-content h1{font-size:clamp(28px,4.8vw,56px);margin:0 0 8px 0;font-weight:900}
+    .hero-content p{max-width:780px;opacity:.95}
+    section{padding:28px 0}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border:1px solid #1f2937}
+    .grid{display:grid;gap:18px}
+    .grid.cols-4{grid-template-columns:repeat(4,1fr)}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    .flex{display:flex;gap:12px;align-items:center}
+    .stack{display:grid;gap:10px}
+    .muted{color:var(--muted)}
+    .divider{height:1px;background:#1f2937;margin:12px 0}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field label{font-size:12px;color:var(--muted)}
+    .field input,.field select,.field textarea{padding:10px;border-radius:12px;border:1px solid #1f2937;background:#0b1320;color:var(--text)}
+    .field input:focus,.field select:focus,.field textarea:focus{outline:none;box-shadow:var(--ring)}
+    .booking-bar{position:relative;z-index:3;background:var(--card);width:min(1180px,92vw);margin:-50px auto 24px auto;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;display:grid;grid-template-columns:repeat(8,1fr);gap:12px}
+    .book-btn{align-self:end}
+    .pill{font-size:12px;padding:4px 8px;background:rgba(96,165,250,.12);color:var(--primary);border-radius:999px}
+    .price-inline{font-weight:800;color:var(--accent)}
+    .room-card{display:grid;gap:10px}
+    .room-head{display:flex;align-items:center;justify-content:space-between}
+    .amenities{display:flex;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:14px}
+    .stars{color:#fbbf24}
+    .tabbar{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{padding:8px 12px;border-radius:10px;border:1px solid #1f2937;cursor:pointer}
+    .tab.active{background:#0b1320;box-shadow:var(--ring)}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:40}
+    .modal{width:min(720px,92vw);background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:18px;border:1px solid #1f2937}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    footer{padding:24px 0;color:var(--muted);border-top:1px solid #1f2937}
+    .sticky-cta{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:50;background:var(--card);border:1px solid #1f2937;border-radius:999px;box-shadow:var(--shadow);padding:8px 12px;display:flex;align-items:center;gap:10px}
+    .notif{position:fixed;top:18px;right:18px;z-index:60;background:#07101e;color:#cfe6ff;border:1px solid #1f2937;box-shadow:var(--shadow);padding:10px 12px;border-radius:12px;display:none}
+    .progress{height:8px;background:#1f2937;border-radius:999px;overflow:hidden}
+    .progress>div{height:100%;background:linear-gradient(90deg,#60a5fa,#34d399);width:0%}
+    .badge{font-size:11px;background:#041022;color:#9fe2ff;border:1px solid #1f2937;border-radius:999px;padding:3px 7px}
+    .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .kpi .card{padding:14px}
+    .ring{box-shadow:var(--ring)}
+    @media (max-width:1080px){.grid.cols-4{grid-template-columns:repeat(3,1fr)}.booking-bar{grid-template-columns:repeat(4,1fr)}}
+    @media (max-width:760px){.nav-links{display:none}.grid.cols-4,.grid.cols-3,.grid.cols-2{grid-template-columns:1fr}.booking-bar{grid-template-columns:1fr}.sticky-cta{left:auto;right:18px;transform:none}}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header role="banner">
+    <video id="hero-video" autoplay muted loop playsinline aria-label="Hotel scenic video">
+      <source src="" type="video/mp4">
+    </video>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="nav">
+      <div class="brand" aria-label="Aurora Grand">
+        <div class="logo">AG</div>
+        <div>Aurora Grand</div>
+      </div>
+      <div class="nav-links" role="navigation" aria-label="Primary">
+        <a href="#rooms">Rooms</a>
+        <a href="#packages">Packages</a>
+        <a href="#dining">Dining</a>
+        <a href="#spa">Spa</a>
+        <a href="#events">Events</a>
+        <a href="#map">Map</a>
+        <button class="btn ghost" id="langToggle" aria-label="Toggle language">English</button>
+        <button class="btn" id="loginOpen" aria-haspopup="dialog">Login</button>
+      </div>
+    </div>
+    <div class="hero-content container">
+      <h1 id="heroTitle">Timeless luxury with a modern brain</h1>
+      <p id="heroDesc">From smart pricing to curated packages and an assistant that knows your style—book faster, stay better.</p>
+    </div>
+  </header>
+
+  <!-- Booking Bar -->
+  <form class="booking-bar card" id="bookingBar" aria-label="Booking search">
+    <div class="field">
+      <label id="lblDest">Destination</label>
+      <input type="text" id="dest" placeholder="City or Resort" value="Aurora Grand" aria-labelledby="lblDest">
+    </div>
+    <div class="field">
+      <label id="lblCheckin">Check-in</label>
+      <input type="date" id="checkin" aria-labelledby="lblCheckin">
+    </div>
+    <div class="field">
+      <label id="lblCheckout">Check-out</label>
+      <input type="date" id="checkout" aria-labelledby="lblCheckout">
+    </div>
+    <div class="field">
+      <label id="lblGuests">Guests</label>
+      <select id="guests" aria-labelledby="lblGuests">
+        <option value="1">1</option>
+        <option value="2" selected>2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+    <div class="field">
+      <label id="lblRooms">Rooms</label>
+      <select id="roomsCount" aria-labelledby="lblRooms">
+        <option value="1" selected>1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+    </div>
+    <div class="field">
+      <label id="lblType">Room type</label>
+      <select id="roomType" aria-labelledby="lblType">
+        <option value="standard">Standard</option>
+        <option value="deluxe">Deluxe</option>
+        <option value="suite" selected>Suite</option>
+        <option value="family">Family</option>
+        <option value="penthouse">Penthouse</option>
+      </select>
+    </div>
+    <div class="field">
+      <label id="lblCurrency">Currency</label>
+      <select id="currency" aria-labelledby="lblCurrency">
+        <option value="INR" selected>INR ₹</option>
+        <option value="USD">USD $</option>
+        <option value="EUR">EUR €</option>
+        <option value="GBP">GBP £</option>
+      </select>
+    </div>
+    <div class="field book-btn">
+      <button class="btn secondary" id="searchBtn" type="button">Search rooms</button>
+    </div>
+  </form>
+
+  <!-- Sticky CTA -->
+  <div class="sticky-cta" aria-live="polite">
+    <span class="badge" id="etaBadge">ETA: ~2m check-in</span>
+    <span id="livePrice">Est. ₹—</span>
+    <button class="btn" id="openCheckout">Checkout</button>
+    <button class="btn ghost" id="themeToggle" aria-label="Toggle dark/light">Theme</button>
+  </div>
+
+  <!-- Notifications -->
+  <div class="notif" id="notif"></div>
+
+  <main class="container" role="main">
+
+    <!-- Price preview & promo -->
+    <section id="pricepreview" class="card" aria-label="Estimate">
+      <div class="flex">
+        <div>
+          <strong id="estLabel">Estimated price</strong>:
+          <span class="price-inline" id="priceText">—</span>
+        </div>
+        <div class="flex" style="margin-left:auto">
+          <input id="promo" placeholder="Promo (e.g., AURORA10)" style="padding:8px;border-radius:10px;border:1px solid #1f2937" aria-label="Promo code">
+          <button class="btn" id="applyPromo">Apply</button>
+          <button class="btn ghost" id="clearPromo">Clear</button>
+        </div>
+      </div>
+      <div class="muted" id="priceNote">Demand, taxes, and add-ons included in estimate.</div>
+      <div class="progress" style="margin-top:10px"><div id="progressBar"></div></div>
+    </section>
+
+    <!-- Filters -->
+    <section class="card" id="filters" aria-label="Room filters">
+      <div class="tabbar" id="filterTabs">
+        <div class="tab active" data-filter="all">All</div>
+        <div class="tab" data-filter="sea">Sea view</div>
+        <div class="tab" data-filter="city">City view</div>
+        <div class="tab" data-filter="garden">Garden</div>
+        <div class="tab" data-filter="accessible">Accessible</div>
+        <div class="tab" data-filter="work">Work-friendly</div>
+        <div class="tab" data-filter="luxury">Luxury</div>
+      </div>
+    </section>
+
+    <!-- Rooms -->
+    <section id="rooms">
+      <h2>Available rooms</h2>
+      <div class="grid cols-4" id="roomGrid" aria-live="polite">
+        <!-- populated by JS -->
+      </div>
+    </section>
+
+    <!-- Wishlist & compare -->
+    <section id="wishlist" class="card" aria-label="Wishlist">
+      <div class="flex" style="justify-content:space-between">
+        <h3>Your wishlist</h3>
+        <div class="flex">
+          <button class="btn ghost" id="compareOpen">Compare</button>
+          <button class="btn danger" id="clearWishlist">Clear</button>
+        </div>
+      </div>
+      <div class="grid cols-4" id="wishlistRow"></div>
+    </section>
+
+    <!-- Packages -->
+    <section id="packages">
+      <h2>Curated packages</h2>
+      <div class="grid cols-3">
+        <div class="card">
+          <div class="room-card">
+            <img src="" alt="Honeymoon escape" id="imgPkg1">
+            <div class="room-head"><h3>Honeymoon Escape</h3><span class="pill">Save 15%</span></div>
+            <p class="muted">Suite + candlelight dinner + spa for two + late checkout.</p>
+            <div class="price-row flex" style="justify-content:space-between">
+              <span><strong>from</strong> <span class="price-inline" id="pkg1Price">₹—</span></span>
+              <button class="btn" data-package="honeymoon">Add to booking</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="room-card">
+            <img src="" alt="Family fun" id="imgPkg2">
+            <div class="room-head"><h3>Family Fun</h3><span class="pill">Kids eat free</span></div>
+            <p class="muted">Family room + breakfast + kids club + airport pickup.</p>
+            <div class="price-row flex" style="justify-content:space-between">
+              <span><strong>from</strong> <span class="price-inline" id="pkg2Price">₹—</span></span>
+              <button class="btn" data-package="family">Add to booking</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="room-card">
+            <img src="" alt="Work & unwind" id="imgPkg3">
+            <div class="room-head"><h3>Work & Unwind</h3><span class="pill">Business perks</span></div>
+            <p class="muted">Deluxe room + cowork lounge + airport transfer + spa passes.</p>
+            <div class="price-row flex" style="justify-content:space-between">
+              <span><strong>from</strong> <span class="price-inline" id="pkg3Price">₹—</span></span>
+              <button class="btn" data-package="work">Add to booking</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dining & spa -->
+    <section id="dining" class="card">
+      <h3>Dining selections</h3>
+      <div class="grid cols-3">
+        <div class="stack">
+          <strong>Chef’s Table</strong>
+          <span class="muted">Eight-course tasting. Limited seats.</span>
+          <div class="flex"><span class="price-inline" id="chefPrice">₹—</span><button class="btn ghost" data-addon="chef">Add</button></div>
+        </div>
+        <div class="stack">
+          <strong>Poolside Bar</strong>
+          <span class="muted">Signature cocktails, live DJ on weekends.</span>
+          <div class="flex"><span class="price-inline" id="barPrice">₹—</span><button class="btn ghost" data-addon="bar">Add</button></div>
+        </div>
+        <div class="stack">
+          <strong>Breakfast Buffet</strong>
+          <span class="muted">Fresh, local, and international favorites.</span>
+          <div class="flex"><span class="price-inline" id="breakfastPrice">₹—</span><button class="btn ghost" data-addon="breakfast">Add</button></div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <h3 id="spa">Spa & wellness</h3>
+      <div class="grid cols-3">
+        <div class="stack">
+          <strong>Couple’s Spa</strong>
+          <span class="muted">90-min ritual, private suite.</span>
+          <div class="flex"><span class="price-inline" id="coupleSpaPrice">₹—</span><button class="btn ghost" data-addon="coupleSpa">Add</button></div>
+        </div>
+        <div class="stack">
+          <strong>Massage</strong>
+          <span class="muted">60-min, aromatherapy.</span>
+          <div class="flex"><span class="price-inline" id="massagePrice">₹—</span><button class="btn ghost" data-addon="massage">Add</button></div>
+        </div>
+        <div class="stack">
+          <strong>Yoga Class</strong>
+          <span class="muted">Sunrise session on the deck.</span>
+          <div class="flex"><span class="price-inline" id="yogaPrice">₹—</span><button class="btn ghost" data-addon="yoga">Add</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Events -->
+    <section id="events">
+      <h2>Resort events</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Sunset Jazz — Fridays</h3>
+          <p class="muted">Live jazz on the ocean terrace. Complimentary welcome drink for guests.</p>
+          <div class="flex"><span>Next: <strong id="nextJazz">—</strong></span><button class="btn" id="remindJazz">Set reminder</button></div>
+        </div>
+        <div class="card">
+          <h3>Moonlight Cinema — Saturdays</h3>
+          <p class="muted">Open-air classics. Beanbags and popcorn provided.</p>
+          <div class="flex"><span>Next: <strong id="nextCinema">—</strong></span><button class="btn" id="remindCinema">Set reminder</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviews -->
+    <section id="reviews" class="card">
+      <h3>Guest reviews</h3>
+      <div class="grid cols-2" id="reviewList"></div>
+      <div class="divider"></div>
+      <div class="grid cols-2">
+        <div class="field">
+          <label for="reviewName">Your name</label>
+          <input id="reviewName" placeholder="First Last">
+        </div>
+        <div class="field">
+          <label for="reviewStars">Stars</label>
+          <select id="reviewStars">
+            <option>5</option><option>4</option><option>3</option><option>2</option><option>1</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="reviewText">Your review</label>
+        <textarea id="reviewText" rows="3" placeholder="Share your experience"></textarea>
+      </div>
+      <div class="flex">
+        <button class="btn" id="submitReview">Submit review</button>
+        <span class="muted" id="reviewNote" style="margin-left:auto">Reviews are moderated (demo).</span>
+      </div>
+    </section>
+
+    <!-- Map -->
+    <section id="map">
+      <h2>Find us</h2>
+      <div class="card">
+        <div class="grid cols-2">
+          <div>
+            <p>Aurora Grand, Seaside Road, Goa, India</p>
+            <p class="muted">Steps to beaches, heritage sites, and nightlife.</p>
+            <div class="divider"></div>
+            <div class="flex">
+              <button class="btn" id="openDirections">Get directions</button>
+              <button class="btn ghost" id="shareLocation">Share location</button>
+              <button class="btn ghost" id="downloadIcal">Add to calendar</button>
+            </div>
+          </div>
+          <div>
+            <img src="" alt="Map placeholder" id="imgMap">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loyalty & achievements -->
+    <section id="loyalty" class="card">
+      <h3>Loyalty & achievements</h3>
+      <div class="grid cols-3">
+        <div class="stack">
+          <strong>Points</strong>
+          <div id="loyaltyPoints">—</div>
+        </div>
+        <div class="stack">
+          <strong>Status</strong>
+          <div id="loyaltyTier">—</div>
+        </div>
+        <div class="stack">
+          <strong>Unlocks</strong>
+          <div id="loyaltyUnlocks" class="muted">Join to unlock perks.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin (mock) -->
+    <section id="admin" class="card">
+      <h3>Admin dashboard (mock)</h3>
+      <div class="kpi">
+        <div class="card"><strong>Occupancy</strong><div id="kpiOcc">—</div></div>
+        <div class="card"><strong>Revenue (week)</strong><div id="kpiRev">—</div></div>
+        <div class="card"><strong>Avg rate</strong><div id="kpiAdr">—</div></div>
+        <div class="card"><strong>Bookings</strong><div id="kpiBook">—</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="grid cols-2">
+        <div class="field">
+          <label>Adjust base rate (%)</label>
+          <input type="number" id="adminRatePct" placeholder="e.g., 5">
+        </div>
+        <div class="field">
+          <label>Set blackout dates (comma-separated YYYY-MM-DD)</label>
+          <input id="blackouts" placeholder="2025-12-31,2026-01-01">
+        </div>
+      </div>
+      <div class="flex" style="margin-top:10px">
+        <button class="btn warn" id="applyAdmin">Apply</button>
+        <button class="btn danger" id="resetAdmin">Reset</button>
+        <span class="muted" style="margin-left:auto">Operational controls for demo only.</span>
+      </div>
+    </section>
+
+    <!-- Summary -->
+    <section id="summary" class="card">
+      <h3>Your booking summary</h3>
+      <div id="summaryContent" class="muted">Select dates and a room to see your full summary here.</div>
+      <div class="flex" style="margin-top:12px">
+        <button class="btn" id="openCheckout2">Proceed to checkout</button>
+        <span class="muted" id="policyNote" style="margin-left:auto">Free cancellation within 48 hours before check-in.</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="container">
+    <div class="flex">
+      <div>&copy; 2025 Aurora Grand</div>
+      <div style="margin-left:auto">Privacy · Terms · Contact</div>
+    </div>
+  </footer>
+
+  <!-- Chatbot -->
+  <div class="chatbot" style="position:fixed;bottom:18px;right:18px;z-index:55">
+    <button class="btn" id="chatToggle">Ask Concierge</button>
+    <div class="chat-window card" id="chatWindow" style="display:none">
+      <div class="modal-header">
+        <strong>Concierge</strong>
+        <button class="btn ghost" id="chatClose">Close</button>
+      </div>
+      <div class="stack" id="chatBody">
+        <div class="muted">Hi! Try “Best room for 2 in November”, “promo”, or “cancel policy”.</div>
+      </div>
+      <div class="flex">
+        <input id="chatInput" placeholder="Type your question..." style="flex:1;padding:10px;border-radius:12px;border:1px solid #1f2937">
+        <button class="btn" id="chatSend">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal-backdrop" id="loginModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Login">
+      <div class="modal-header">
+        <strong>Login</strong>
+        <button class="btn ghost" id="loginClose">Close</button>
+      </div>
+      <div class="grid cols-2">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••">
+        </div>
+      </div>
+      <div class="flex" style="margin-top:12px">
+        <button class="btn" id="loginSubmit">Login</button>
+        <span class="muted" style="margin-left:auto">New? We’ll create an account automatically.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare Modal -->
+  <div class="modal-backdrop" id="compareModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Compare">
+      <div class="modal-header">
+        <strong>Compare rooms</strong>
+        <button class="btn ghost" id="compareClose">Close</button>
+      </div>
+      <div id="compareGrid" class="grid cols-2"></div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal-backdrop" id="checkoutModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Checkout">
+      <div class="modal-header">
+        <strong>Checkout</strong>
+        <button class="btn ghost" id="checkoutClose">Close</button>
+      </div>
+      <div id="checkoutDetails" class="muted">Your selection will appear here.</div>
+      <div class="divider"></div>
+      <div class="grid cols-2">
+        <div>
+          <div class="field"><label>Full name</label><input id="fullName" placeholder="First Last"></div>
+          <div class="field"><label>Phone</label><input id="phone" placeholder="+91 98765 43210"></div>
+          <div class="field"><label>Special requests</label><input id="requests" placeholder="e.g., late check-in"></div>
+          <div class="field"><label>Arrival time</label><input id="arrival" type="time"></div>
+          <div class="field"><label>Accessibility needs</label><select id="accessNeed"><option>None</option><option>Wheelchair</option><option>Hearing</option></select></div>
+        </div>
+        <div>
+          <div class="field"><label>Payment method</label><select id="payMethod"><option value="card" selected>Card</option><option value="upi">UPI</option><option value="paypal">PayPal</option></select></div>
+          <div class="field"><label>Card/UPI ID</label><input id="payId" placeholder="4111 1111 1111 1111 / your@upi"></div>
+          <div class="field"><label>Apply loyalty points</label><select id="loyaltyApply"><option value="0" selected>Do not apply</option><option value="500">Use 500 pts (₹500)</option><option value="1000">Use 1000 pts (₹1000)</option></select></div>
+          <div class="field"><label>Invoice email</label><input id="invoiceEmail" placeholder="billing@example.com"></div>
+        </div>
+      </div>
+      <div class="flex" style="margin-top:12px">
+        <button class="btn secondary" id="confirmPay">Confirm & pay</button>
+        <span class="muted" style="margin-left:auto" id="checkoutNote">Secure mock checkout. No real payment processed.</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -------------------- Data & State --------------------
+    const FX = { INR:1, USD:0.012, EUR:0.011, GBP:0.0098 };
+    const TAX = { gst:0.12, city:0.05 };        // 12% GST + 5% city tax
+    const FEES = { service:300, resort:450 };   // per booking fees (INR base)
+    const ADDONS = {
+      chef: 3500, bar: 1200, breakfast: 800,
+      coupleSpa: 5600, massage: 2400, yoga: 600
+    };
+    const BASE = { standard:3600, deluxe:5400, suite:8200, family:7000, penthouse:12800 }; // INR/night base
+    const ROOMS = [
+      { id:'r1', name:'Standard Garden', type:'standard', beds:'Queen', view:'garden', tags:['accessible'], work:false, lux:false, img:'https://images.unsplash.com/photo-1560067174-894cb4f3df1a?q=80&w=1000&auto=format&fit=crop', rating:4.2 },
+      { id:'r2', name:'Deluxe Sea', type:'deluxe', beds:'King', view:'sea', tags:['work'], work:true, lux:false, img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop', rating:4.5 },
+      { id:'r3', name:'Premier Suite', type:'suite', beds:'King', view:'sea', tags:['luxury','work'], work:true, lux:true, img:'https://images.unsplash.com/photo-1555006304-49f05f0d8402?q=80&w=1000&auto=format&fit=crop', rating:4.7 },
+      { id:'r4', name:'Family Comfort', type:'family', beds:'2 Queen', view:'garden', tags:['accessible'], work:false, lux:false, img:'https://images.unsplash.com/photo-1551907234-8f22f95f6c07?q=80&w=1000&auto=format&fit=crop', rating:4.3 },
+      { id:'r5', name:'Deluxe Corner', type:'deluxe', beds:'King', view:'city', tags:['work'], work:true, lux:false, img:'https://images.unsplash.com/photo-1521783986064-7fe4de5d0f57?q=80&w=1000&auto=format&fit=crop', rating:4.4 },
+      { id:'r6', name:'Signature Suite', type:'suite', beds:'King', view:'sea', tags:['luxury'], work:false, lux:true, img:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1000&auto=format&fit=crop', rating:4.8 },
+      { id:'r7', name:'City Penthouse', type:'penthouse', beds:'King', view:'city', tags:['luxury','work'], work:true, lux:true, img:'https://images.unsplash.com/photo-1526868775631-2bf9f3ca08a0?q=80&w=1000&auto=format&fit=crop', rating:4.9 },
+      { id:'r8', name:'Garden Standard Plus', type:'standard', beds:'Queen', view:'garden', tags:[], work:false, lux:false, img:'https://images.unsplash.com/photo-1559599101-9fbc2a55bf07?q=80&w=1000&auto=format&fit=crop', rating:4.1 }
+    ];
+    const REVIEWS = [
+      { name:'Asha', stars:5, text:'Loved the suite and the sunset jazz. Smooth booking and friendly staff.' },
+      { name:'Kunal', stars:4, text:'Great breakfast and spa. Deluxe room was comfortable with fast Wi‑Fi.' },
+      { name:'Meera', stars:5, text:'Penthouse is a dream. Worth the price for special occasions.' },
+      { name:'Rohit', stars:3, text:'Family room decent, kids club a hit. Check-in could be quicker.' }
+    ];
+    const LANG = {
+      en:{ heroTitle:'Timeless luxury with a modern brain', heroDesc:'From smart pricing to curated packages and an assistant that knows your style—book faster, stay better.', estLabel:'Estimated price', lblDest:'Destination', lblCheckin:'Check-in', lblCheckout:'Check-out', lblGuests:'Guests', lblRooms:'Rooms', lblType:'Room type', lblCurrency:'Currency' },
+      hi:{ heroTitle:'आधुनिक बुद्धि के साथ शाश्वत विलासिता', heroDesc:'स्मार्ट प्राइसिंग से लेकर क्यूरेटेड पैकेज तक — आपकी पसंद जानने वाला सहायक। तेज़ी से बुक करें, बेहतर ठहरें।', estLabel:'अनुमानित कीमत', lblDest:'गंतव्य', lblCheckin:'चेक-इन', lblCheckout:'चेक-आउट', lblGuests:'मेहमान', lblRooms:'कमरे', lblType:'कमरे का प्रकार', lblCurrency:'मुद्रा' }
+    };
+    const state = {
+      checkin:null, checkout:null, nights:0, guests:2, roomsCount:1, roomType:'suite', currency:'INR',
+      demandFactor:1.0, promo:null, addons:[], wishlist:JSON.parse(localStorage.getItem('wishlist')||'[]'),
+      selection:null, loyaltyPoints:400, loyaltyTier:'Silver', blackouts:[], adminRatePct:0, language:'en'
+    };
+
+    // -------------------- Utilities --------------------
+    const fmt = (amt, cur='INR') => {
+      const r = FX[cur]||1; const v = Math.round(amt*r);
+      const sign = cur==='INR'?'₹':cur==='USD'?'$':cur==='EUR'?'€':'£';
+      return `${sign}${v.toLocaleString('en-IN')}`;
+    };
+    const parseDate = v => v?new Date(v+'T12:00:00'):null;
+    const daysBetween = (a,b)=>Math.max(0, Math.round((b-a)/(1000*60*60*24)));
+    const toast = (msg)=>{const n=document.getElementById('notif'); n.textContent=msg; n.style.display='block'; setTimeout(()=>n.style.display='none',2200)};
+    const progress = pct => { document.getElementById('progressBar').style.width = Math.min(100, Math.max(0, pct)) + '%'; };
+    const setMedia = ()=>{
+      document.getElementById('imgPkg1').src='https://images.unsplash.com/photo-1501117716987-c8e3f525e0d1?q=80&w=1000&auto=format&fit=crop';
+      document.getElementById('imgPkg2').src='https://images.unsplash.com/photo-1606046604972-c7f7b6d1f9ca?q=80&w=1000&auto=format&fit=crop';
+      document.getElementById('imgPkg3').src='https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1000&auto=format&fit=crop';
+      document.getElementById('imgMap').src='https://images.unsplash.com/photo-1463100099107-aa0980c465d0?q=80&w=1200&auto=format&fit=crop';
+      document.getElementById('hero-video').src='https://cdn.coverr.co/videos/coverr-sunrise-over-the-sea-1661/1080p.mp4';
+    };
+
+    // -------------------- Language --------------------
+    const applyLang = (code)=>{
+      state.language=code;
+      const t=LANG[code]||LANG.en;
+      document.getElementById('heroTitle').textContent=t.heroTitle;
+      document.getElementById('heroDesc').textContent=t.heroDesc;
+      document.getElementById('estLabel').textContent=t.estLabel;
+      document.getElementById('lblDest').textContent=t.lblDest;
+      document.getElementById('lblCheckin').textContent=t.lblCheckin;
+      document.getElementById('lblCheckout').textContent=t.lblCheckout;
+      document.getElementById('lblGuests').textContent=t.lblGuests;
+      document.getElementById('lblRooms').textContent=t.lblRooms;
+      document.getElementById('lblType').textContent=t.lblType;
+      document.getElementById('lblCurrency').textContent=t.lblCurrency;
+      document.getElementById('langToggle').textContent = code==='en'?'English':'हिन्दी';
+    };
+
+    // -------------------- Pricing --------------------
+    const computeDemand = (ci)=>{
+      if(!ci) return 1.0;
+      const m = ci.getMonth()+1;
+      const weekend = [5,6].includes(ci.getDay()) ? 1.12 : 1.0;
+      const peak = (m>=11 || m<=2) ? 1.18 : 1.0;        // Nov–Feb
+      const holiday = state.blackouts.some(d=>sameDate(ci, parseDate(d))) ? 1.25 : 1.0;
+      return +(weekend * peak * holiday).toFixed(2);
+    };
+    const sameDate = (a,b)=>!!(a&&b)&&a.toISOString().slice(0,10)===b.toISOString().slice(0,10);
+    const priceNight = (type, guests)=>{
+      let base = BASE[type]||4200;
+      const pct = (state.adminRatePct||0)/100;
+      base = base * (1+pct);
+      if(guests>2) base += (guests-2) * 700;
+      return Math.round(base);
+    };
+    const applyPromoTotal = (t, type)=>{
+      if(!state.promo) return t;
+      if(state.promo==='AURORA10') return Math.round(t*0.90);
+      if(state.promo==='SUITE5' && type==='suite') return Math.round(t*0.95);
+      if(state.promo==='WEEK3' && state.nights>=3) return Math.round(t*0.93);
+      return t;
+    };
+    const addonTotal = ()=> state.addons.reduce((s,a)=>s+ADDONS[a],0);
+    const taxTotal = (sub)=> Math.round(sub*TAX.gst + sub*TAX.city);
+    const feeTotal = ()=> FEES.service + FEES.resort;
+
+    const estimate = (type)=>{
+      const nights = Math.max(1, state.nights);
+      const perNight = priceNight(type, state.guests);
+      const demand = state.demandFactor;
+      let subtotal = Math.round(perNight * demand * nights * state.roomsCount);
+      subtotal += addonTotal();
+      subtotal = applyPromoTotal(subtotal, type);
+      const taxes = taxTotal(subtotal);
+      const fees = feeTotal();
+      const total = subtotal + taxes + fees;
+      return { nights, perNight, demand, subtotal, taxes, fees, total };
+    };
+
+    // -------------------- Renderers --------------------
+    const renderPricePreview = ()=>{
+      const e = estimate(state.roomType);
+      const txt = `${fmt(e.total,state.currency)} • ${e.nights} night${e.nights>1?'s':''}, ${state.roomsCount} room(s), demand ×${e.demand}`;
+      document.getElementById('priceText').textContent=txt;
+      document.getElementById('priceNote').textContent = `Base ${fmt(e.perNight,state.currency)}/night · Taxes ${fmt(e.taxes,state.currency)} · Fees ${fmt(e.fees,state.currency)}${state.promo?` · Promo ${state.promo}`:''}`;
+      document.getElementById('livePrice').textContent = `Est. ${fmt(e.total,state.currency)}`;
+      progress(20 + Math.min(60, e.total/20000));
+    };
+
+    const filterMatches = (room, f)=>{
+      if(f==='all') return true;
+      if(f==='sea') return room.view==='sea';
+      if(f==='city') return room.view==='city';
+      if(f==='garden') return room.view==='garden';
+      if(f==='accessible') return room.tags.includes('accessible');
+      if(f==='work') return !!room.work;
+      if(f==='luxury') return !!room.lux;
+      return true;
+    };
+
+    const renderRooms = ()=>{
+      const grid = document.getElementById('roomGrid'); grid.innerHTML='';
+      const activeTab = document.querySelector('#filterTabs .active').getAttribute('data-filter');
+      ROOMS.filter(r=>filterMatches(r,activeTab)).forEach(r=>{
+        const e = estimate(r.type);
+        const el = document.createElement('div');
+        const stars = '★'.repeat(Math.round(r.rating)) + '☆'.repeat(5-Math.round(r.rating));
+        el.className='card';
+        el.innerHTML = `
+          <div class="room-card">
+            <img src="${r.img}" alt="${r.name}">
+            <div class="room-head">
+              <h3>${r.name}</h3><span class="pill">${r.view} view</span>
+            </div>
+            <div class="amenities">
+              <span>• ${r.beds}</span>
+              <span>• ${state.guests} guest(s)</span>
+              <span>• ${state.roomsCount} room(s)</span>
+              <span class="stars" aria-label="${r.rating} stars">${stars}</span>
+            </div>
+            <div class="divider"></div>
+            <div class="flex" style="justify-content:space-between">
+              <div>
+                <div class="muted">${e.nights} night(s) · demand ×${e.demand}</div>
+                <div><strong>${fmt(e.total,state.currency)}</strong> total</div>
+              </div>
+              <div class="flex">
+                <button class="btn ghost" data-wish="${r.id}">Save</button>
+                <button class="btn" data-book="${r.id}">Book</button>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(el);
+      });
+    };
+
+    const renderWishlist = ()=>{
+      const row = document.getElementById('wishlistRow'); row.innerHTML='';
+      if(!state.wishlist.length){
+        row.innerHTML='<div class="muted">No items yet. Click “Save” on any room.</div>';
+        return;
+      }
+      state.wishlist.forEach(id=>{
+        const r = ROOMS.find(x=>x.id===id); if(!r) return;
+        const e = estimate(r.type);
+        const el = document.createElement('div');
+        el.className='card';
+        el.innerHTML=`
+          <img src="${r.img}" alt="${r.name}">
+          <strong>${r.name}</strong>
+          <div class="muted">${r.beds} · ${r.view}</div>
+          <div><span class="price-inline">${fmt(e.total,state.currency)}</span></div>
+          <div class="flex">
+            <button class="btn" data-book="${r.id}">Book</button>
+            <button class="btn danger" data-remove="${r.id}" style="margin-left:auto">Remove</button>
+          </div>
+        `;
+        row.appendChild(el);
+      });
+      localStorage.setItem('wishlist', JSON.stringify(state.wishlist));
+    };
+
+    const renderPackagePrices = ()=>{
+      const honey = estimate('suite'); document.getElementById('pkg1Price').textContent = fmt(Math.round(honey.total*0.85), state.currency);
+      const fam = estimate('family'); document.getElementById('pkg2Price').textContent = fmt(Math.round(fam.total*0.92), state.currency);
+      const work = estimate('deluxe'); document.getElementById('pkg3Price').textContent = fmt(Math.round(work.total*0.90), state.currency);
+    };
+
+    const renderAddonsPrices = ()=>{
+      document.getElementById('chefPrice').textContent = fmt(ADDONS.chef, state.currency);
+      document.getElementById('barPrice').textContent = fmt(ADDONS.bar, state.currency);
+      document.getElementById('breakfastPrice').textContent = fmt(ADDONS.breakfast, state.currency);
+      document.getElementById('coupleSpaPrice').textContent = fmt(ADDONS.coupleSpa, state.currency);
+      document.getElementById('massagePrice').textContent = fmt(ADDONS.massage, state.currency);
+      document.getElementById('yogaPrice').textContent = fmt(ADDONS.yoga, state.currency);
+    };
+
+    const renderSummary = ()=>{
+      if(!state.selection){
+        document.getElementById('summaryContent').innerHTML='Select a room to see summary.';
+        return;
+      }
+      const { roomId, package } = state.selection;
+      const r = ROOMS.find(x=>x.id===roomId);
+      const e = estimate(r.type);
+      let pkgText = 'None', total = e.total;
+      if(package==='honeymoon'){ total = Math.round(e.total*0.85); pkgText='Honeymoon Escape (-15%)'; }
+      if(package==='family'){ total = Math.round(e.total*0.92); pkgText='Family Fun (-8%)'; }
+      if(package==='work'){ total = Math.round(e.total*0.90); pkgText='Work & Unwind (-10%)'; }
+      const list = [
+        `<strong>Room:</strong> ${r.name} (${r.type})`,
+        `<strong>Dates:</strong> ${state.checkin?state.checkin.toDateString():'—'} → ${state.checkout?state.checkout.toDateString():'—'} (${e.nights} night${e.nights>1?'s':''})`,
+        `<strong>Guests/Rooms:</strong> ${state.guests} guest(s), ${state.roomsCount} room(s)`,
+        `<strong>Package:</strong> ${pkgText}`,
+        `<strong>Add-ons:</strong> ${state.addons.length?state.addons.join(', '):'None'}`,
+        `<strong>Promo:</strong> ${state.promo||'None'}`,
+        `<strong>Total:</strong> ${fmt(total,state.currency)}`
+      ];
+      document.getElementById('summaryContent').innerHTML = list.map(x=>`<div>${x}</div>`).join('');
+    };
+
+    const renderReviews = ()=>{
+      const list = document.getElementById('reviewList'); list.innerHTML='';
+      REVIEWS.forEach(r=>{
+        const el=document.createElement('div'); el.className='card';
+        el.innerHTML = `<strong>${r.name}</strong><div class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div><p class="muted">${r.text}</p>`;
+        list.appendChild(el);
+      });
+    };
+
+    const renderLoyalty = ()=>{
+      document.getElementById('loyaltyPoints').textContent = `${state.loyaltyPoints} pts`;
+      const tier = state.loyaltyPoints>=1500?'Platinum':state.loyaltyPoints>=900?'Gold':'Silver';
+      state.loyaltyTier = tier;
+      document.getElementById('loyaltyTier').textContent = tier;
+      document.getElementById('loyaltyUnlocks').textContent = tier==='Platinum'?'Complimentary upgrades & spa credits':tier==='Gold'?'Late checkout & lounge access':'Welcome drink & priority support';
+    };
+
+    const renderAdminKPIs = ()=>{
+      document.getElementById('kpiOcc').textContent = `${Math.round(62 + Math.random()*25)}%`;
+      document.getElementById('kpiRev').textContent = fmt(650000 + Math.round(Math.random()*250000), 'INR');
+      document.getElementById('kpiAdr').textContent = fmt(BASE.deluxe + Math.round(Math.random()*900), 'INR');
+      document.getElementById('kpiBook').textContent = `${150 + Math.round(Math.random()*60)}`;
+    };
+
+    // -------------------- Chatbot --------------------
+    const botReply = (text)=>{
+      const t=text.toLowerCase();
+      if(t.includes('best room')||t.includes('recommend')){
+        const month=(state.checkin?.getMonth()??new Date().getMonth())+1;
+        const rec = (month===11||month<=2)?'Premier Suite for winter sunsets':'Deluxe Sea for breezy views';
+        return `For ${state.guests} guest(s), ${state.roomsCount} room(s), try the ${rec}.`;
+      }
+      if(t.includes('promo')) return 'Try AURORA10 for 10% off, SUITE5 for 5% off suites, or WEEK3 for 7% off 3+ nights.';
+      if(t.includes('cancel')) return 'Free cancellation up to 48 hours before check-in. After that, one-night fee applies.';
+      if(t.includes('breakfast')) return 'Included with Deluxe, Suite, Family and most packages. Or add “breakfast” as an add-on.';
+      if(t.includes('upgrade')) return 'Gold and Platinum loyalty tiers unlock complimentary upgrades when occupancy is low.';
+      if(t.includes('events')) return `Next Friday: Sunset Jazz ${nextFriday()}; Saturday: Moonlight Cinema ${nextSaturday()}.`;
+      return 'I can help with rooms, packages, promos, events, upgrades, and policies. Ask me anything!';
+    };
+
+    // -------------------- Helpers --------------------
+    const nextFriday = ()=>{
+      const d=new Date(); const diff=(5-d.getDay()+7)%7 || 7; d.setDate(d.getDate()+diff); return d.toDateString();
+    };
+    const nextSaturday = ()=>{
+      const d=new Date(); const diff=(6-d.getDay()+7)%7 || 7; d.setDate(d.getDate()+diff); return d.toDateString();
+    };
+    const downloadICS = ()=>{
+      const start = state.checkin ? state.checkin : new Date();
+      const end = state.checkout ? state.checkout : new Date(start.getTime()+24*3600*1000);
+      const s = start.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+      const e = end.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+      const ics = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+DTSTART:${s}
+DTEND:${e}
+SUMMARY:Aurora Grand Stay
+LOCATION:Aurora Grand, Goa
+END:VEVENT
+END:VCALENDAR`;
+      const blob=new Blob([ics],{type:'text/calendar'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download='aurora-grand.ics'; a.click(); setTimeout(()=>URL.revokeObjectURL(url),500);
+    };
+
+    // -------------------- Init --------------------
+    window.addEventListener('DOMContentLoaded',()=>{
+      setMedia();
+      // defaults
+      const today=new Date(); const t1=new Date(today); t1.setDate(today.getDate()+1);
+      const t2=new Date(today); t2.setDate(today.getDate()+3);
+      document.getElementById('checkin').value = t1.toISOString().slice(0,10);
+      document.getElementById('checkout').value= t2.toISOString().slice(0,10);
+      document.getElementById('nextJazz').textContent=nextFriday();
+      document.getElementById('nextCinema').textContent=nextSaturday();
+      state.checkin=parseDate(document.getElementById('checkin').value);
+      state.checkout=parseDate(document.getElementById('checkout').value);
+      state.nights=daysBetween(state.checkin, state.checkout);
+      state.demandFactor=computeDemand(state.checkin);
+      applyLang('en');
+      renderPricePreview(); renderRooms(); renderWishlist(); renderPackagePrices(); renderAddonsPrices();
+      renderReviews(); renderLoyalty(); renderAdminKPIs();
+
+      // filter tabs
+      document.getElementById('filterTabs').addEventListener('click',(e)=>{
+        const t=e.target.closest('.tab'); if(!t) return;
+        document.querySelectorAll('#filterTabs .tab').forEach(x=>x.classList.remove('active'));
+        t.classList.add('active'); renderRooms();
+      });
+
+      // inputs
+      ['checkin','checkout','guests','roomsCount','roomType','currency'].forEach(id=>{
+        document.getElementById(id).addEventListener('change',()=>{
+          state.checkin=parseDate(document.getElementById('checkin').value);
+          state.checkout=parseDate(document.getElementById('checkout').value);
+          state.nights=daysBetween(state.checkin, state.checkout);
+          state.guests=parseInt(document.getElementById('guests').value,10);
+          state.roomsCount=parseInt(document.getElementById('roomsCount').value,10);
+          state.roomType=document.getElementById('roomType').value;
+          state.currency=document.getElementById('currency').value;
+          state.demandFactor=computeDemand(state.checkin);
+          renderPricePreview(); renderRooms(); renderWishlist(); renderPackagePrices(); renderSummary();
+        });
+      });
+      document.getElementById('searchBtn').addEventListener('click',()=>{ toast('Searching rooms…'); renderRooms(); });
+
+      // promo
+      document.getElementById('applyPromo').addEventListener('click',()=>{
+        const code=document.getElementById('promo').value.trim().toUpperCase();
+        if(['AURORA10','SUITE5','WEEK3'].includes(code)){ state.promo=code; toast(`Applied promo: ${code}`); }
+        else { toast('Invalid promo'); state.promo=null; }
+        renderPricePreview(); renderRooms(); renderPackagePrices(); renderSummary();
+      });
+      document.getElementById('clearPromo').addEventListener('click',()=>{ state.promo=null; document.getElementById('promo').value=''; renderPricePreview(); renderRooms(); renderPackagePrices(); renderSummary(); });
+
+      // wishlist, book, remove (delegation)
+      document.getElementById('roomGrid').addEventListener('click',(e)=>{
+        const w=e.target.getAttribute('data-wish'); const b=e.target.getAttribute('data-book');
+        if(w){ if(!state.wishlist.includes(w)) state.wishlist.push(w); renderWishlist(); toast('Saved to wishlist'); }
+        if(b){ state.selection={ roomId:b, package:state.selection?.package||null }; renderSummary(); window.scrollTo({ top:document.getElementById('summary').offsetTop-20, behavior:'smooth' }); }
+      });
+      document.getElementById('wishlistRow').addEventListener('click',(e)=>{
+        const rem=e.target.getAttribute('data-remove'); const book=e.target.getAttribute('data-book');
+        if(rem){ state.wishlist=state.wishlist.filter(x=>x!==rem); renderWishlist(); }
+        if(book){ state.selection={ roomId:book, package:state.selection?.package||null }; renderSummary(); }
+      });
+      document.getElementById('clearWishlist').addEventListener('click',()=>{ state.wishlist=[]; renderWishlist(); });
+
+      // compare modal
+      document.getElementById('compareOpen').addEventListener('click',()=>{
+        const modal=document.getElementById('compareModal'); const grid=document.getElementById('compareGrid'); grid.innerHTML='';
+        state.wishlist.slice(0,4).forEach(id=>{
+          const r=ROOMS.find(x=>x.id===id); if(!r) return;
+          const e=estimate(r.type);
+          const div=document.createElement('div'); div.className='card';
+          div.innerHTML = `<strong>${r.name}</strong><div class="muted">${r.beds} · ${r.view}</div><div>Rate: ${fmt(e.subtotal/state.nights || e.perNight,state.currency)}/night</div><div>Total: <strong>${fmt(e.total,state.currency)}</strong></div>`;
+          grid.appendChild(div);
+        });
+        modal.style.display='flex';
+      });
+      document.getElementById('compareClose').addEventListener('click',()=>{ document.getElementById('compareModal').style.display='none'; });
+
+      // packages add
+      document.querySelectorAll('[data-package]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const pkg=btn.getAttribute('data-package');
+          if(!state.selection) toast('Select a room first.');
+          else { state.selection.package=pkg; renderSummary(); toast(`Package added: ${pkg}`); }
+        });
+      });
+
+      // addons
+      document.querySelectorAll('[data-addon]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const a=btn.getAttribute('data-addon');
+          if(state.addons.includes(a)) { state.addons=state.addons.filter(x=>x!==a); btn.classList.remove('ring'); toast(`Removed: ${a}`); }
+          else { state.addons.push(a); btn.classList.add('ring'); toast(`Added: ${a}`); }
+          renderPricePreview(); renderSummary();
+        });
+      });
+
+      // events
+      document.getElementById('remindJazz').addEventListener('click',()=>toast('Reminder set for Sunset Jazz (demo).'));
+      document.getElementById('remindCinema').addEventListener('click',()=>toast('Reminder set for Moonlight Cinema (demo).'));
+
+      // map & calendar
+      document.getElementById('openDirections').addEventListener('click',()=>toast('Opening directions (demo).'));
+      document.getElementById('shareLocation').addEventListener('click', async ()=>{
+        try{ await navigator.clipboard.writeText('Aurora Grand, Goa, India'); toast('Location copied'); }catch{ toast('Copy failed'); }
+      });
+      document.getElementById('downloadIcal').addEventListener('click', downloadICS);
+
+      // chatbot
+      const chatWindow=document.getElementById('chatWindow');
+      document.getElementById('chatToggle').addEventListener('click',()=>{ chatWindow.style.display = chatWindow.style.display==='none'?'block':'none'; });
+      document.getElementById('chatClose').addEventListener('click',()=>{ chatWindow.style.display='none'; });
+      document.getElementById('chatSend').addEventListener('click',()=>{
+        const input=document.getElementById('chatInput'); const txt=input.value.trim(); if(!txt) return;
+        const body=document.getElementById('chatBody');
+        const u=document.createElement('div'); u.textContent='You: '+txt; body.appendChild(u);
+        const b=document.createElement('div'); b.textContent='Bot: '+botReply(txt); body.appendChild(b);
+        input.value=''; body.scrollTop=body.scrollHeight;
+      });
+
+      // login
+      document.getElementById('loginOpen').addEventListener('click',()=>{ document.getElementById('loginModal').style.display='flex'; });
+      document.getElementById('loginClose').addEventListener('click',()=>{ document.getElementById('loginModal').style.display='none'; });
+      document.getElementById('loginSubmit').addEventListener('click',()=>{
+        const email=document.getElementById('loginEmail').value.trim();
+        const pass=document.getElementById('loginPass').value.trim();
+        if(!email||!pass){ toast('Enter email and password'); return; }
+        toast('Logged in (demo). Loyalty boosted.');
+        document.getElementById('loginModal').style.display='none';
+        state.loyaltyPoints = Math.max(state.loyaltyPoints, 800);
+        renderLoyalty();
+      });
+
+      // checkout triggers
+      const openCO = ()=>{
+        if(!state.selection){ toast('Select a room first'); return; }
+        const { roomId, package } = state.selection;
+        const r=ROOMS.find(x=>x.id===roomId);
+        const e=estimate(r.type);
+        let total=e.total;
+        if(package==='honeymoon') total=Math.round(total*0.85);
+        if(package==='family') total=Math.round(total*0.92);
+        if(package==='work') total=Math.round(total*0.90);
+        document.getElementById('checkoutDetails').innerHTML = `
+          <div><strong>${r.name}</strong> • ${state.guests} guest(s), ${state.roomsCount} room(s), ${e.nights} night(s)</div>
+          <div>Package: ${package||'None'} • Add-ons: ${state.addons.length?state.addons.join(', '):'None'}</div>
+          <div>Taxes: ${fmt(e.taxes,state.currency)} • Fees: ${fmt(e.fees,state.currency)}</div>
+          <div>Total: <strong>${fmt(total,state.currency)}</strong> (${state.currency})</div>
+        `;
+        document.getElementById('checkoutModal').style.display='flex';
+      };
+      document.getElementById('openCheckout').addEventListener('click', openCO);
+      document.getElementById('openCheckout2').addEventListener('click', openCO);
+      document.getElementById('checkoutClose').addEventListener('click',()=>{ document.getElementById('checkoutModal').style.display='none'; });
+
+      // confirm pay
+      document.getElementById('confirmPay').addEventListener('click',()=>{
+        const name=document.getElementById('fullName').value.trim();
+        const payId=document.getElementById('payId').value.trim();
+        if(!name||!payId){ toast('Fill name and payment ID'); return; }
+        toast(`Payment successful (demo). Thank you, ${name}!`);
+        document.getElementById('checkoutModal').style.display='none';
+        state.loyaltyPoints += 250; renderLoyalty();
+      });
+      document.getElementById('loyaltyApply').addEventListener('change',()=>{
+        const val=parseInt(document.getElementById('loyaltyApply').value,10);
+        document.getElementById('checkoutNote').textContent = val?`Applying ${val} pts discount (demo).`:'Secure mock checkout. No real payment processed.';
+      });
+
+      // admin controls
+      document.getElementById('applyAdmin').addEventListener('click',()=>{
+        const pct=parseFloat(document.getElementById('adminRatePct').value||'0');
+        const bks=document.getElementById('blackouts').value.trim();
+        state.adminRatePct=isNaN(pct)?0:pct;
+        state.blackouts = bks?bks.split(',').map(s=>s.trim()):[];
+        state.demandFactor=computeDemand(state.checkin);
+        renderPricePreview(); renderRooms(); renderSummary(); toast('Admin changes applied');
+      });
+      document.getElementById('resetAdmin').addEventListener('click',()=>{
+        state.adminRatePct=0; state.blackouts=[]; document.getElementById('adminRatePct').value=''; document.getElementById('blackouts').value='';
+        state.demandFactor=computeDemand(state.checkin);
+        renderPricePreview(); renderRooms(); renderSummary(); toast('Admin reset');
+      });
+
+      // theme
+      document.getElementById('themeToggle').addEventListener('click',()=>{
+        const bg=getComputedStyle(document.body).getPropertyValue('--bg').trim();
+        const dark = bg==='#0f172a';
+        document.documentElement.style.setProperty('--bg', dark?'#f7fafc':'#0f172a');
+        document.documentElement.style.setProperty('--card', dark?'#ffffff':'#111827');
+        document.documentElement.style.setProperty('--text', dark?'#111827':'#e5e7eb');
+        document.documentElement.style.setProperty('--muted', dark?'#6b7280':'#9ca3af');
+        document.documentElement.style.setProperty('--primary', dark?'#2563eb':'#60a5fa');
+        document.documentElement.style.setProperty('--accent', dark?'#10b981':'#34d399');
+        document.documentElement.style.setProperty('--danger', dark?'#ef4444':'#ef4444');
+        document.documentElement.style.setProperty('--warn', dark?'#f59e0b':'#f59e0b');
+        toast(dark?'Light mode':'Dark mode');
+      });
+
+      // language
+      document.getElementById('langToggle').addEventListener('click',()=>{
+        const next = state.language==='en'?'hi':'en';
+        applyLang(next);
+      });
+
+      // ETA badge mock update
+      setInterval(()=>{ document.getElementById('etaBadge').textContent = 'ETA: ~' + (1+Math.floor(Math.random()*3)) + 'm check-in'; }, 4000);
+
+      // Live KPIs update (mock)
+      setInterval(renderAdminKPIs, 8000);
+    });
+  </script>
+</body>
+</html>

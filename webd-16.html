@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hotel Booking</title>
+  <style>
+    body {
+      background-color: #f0f8ff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    form {
+      background-color: #ffffff;
+      padding: 20px;
+      border: 1px solid #ccc;
+      width: 300px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+    }
+    input[type="submit"] {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    input[type="submit"]:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Hotel Booking Form</h1>
+  <form>
+    Name: <input type="text" name="name"><br>
+    Email: <input type="email" name="email"><br>
+    Check-in Date: <input type="date" name="checkin"><br>
+    Check-out Date: <input type="date" name="checkout"><br>
+    Room Type:
+    <select name="room">
+      <option>Standard</option>
+      <option>Deluxe</option>
+      <option>Suite</option>
+    </select><br>
+    Guests: <input type="number" name="guests" min="1"><br>
+    <input type="submit" value="Book Now">
+  </form>
+
+</body>
+</html>
