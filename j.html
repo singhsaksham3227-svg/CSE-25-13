@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Split Hero</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .hero {
+      display: flex;              /* flexbox activated */
+      align-items: center;        /* vertical centering */
+      justify-content: space-between;
+      height: 100vh;              /* full viewport height */
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+
+    .hero-text {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .hero-text h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .hero-text p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .hero-text button {
+      padding: 10px 20px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .hero-text button:hover {
+      background-color: #1976D2;
+    }
+
+    .hero-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Flexbox Split Hero</h1>
+      <p>This layout places text and image side by side, perfect for product or service highlights.</p>
+      <button>Learn More</button>
+    </div>
+    <div class="hero-image">
+      <img src="https://via.placeholder.com/500x300" alt="Placeholder Image">
+    </div>
+  </section>
+</body>
+</html>
