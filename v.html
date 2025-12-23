@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Dashboard Layout</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .main {
+      flex: 1;
+      display: flex; /* sidebar + content side by side */
+    }
+
+    .sidebar {
+      flex: 0 0 220px; /* fixed width */
+      background-color: #444;
+      color: white;
+      padding: 20px;
+    }
+
+    .content {
+      flex: 1;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    footer {
+      background-color: #222;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="logo">MyDashboard</div>
+    <div class="actions">
+      <span>User</span> | <span>Logout</span>
+    </div>
+  </div>
+  <div class="main">
+    <div class="sidebar">
+      <h3>Navigation</h3>
+      <ul>
+        <li>Overview</li>
+        <li>Reports</li>
+        <li>Settings</li>
+      </ul>
+    </div>
+    <div class="content">
+      <h1>Dashboard Content</h1>
+      <p>This is the main content area with a sidebar and topbar.</p>
+    </div>
+  </div>
+  <footer>
+    <p>Footer © 2025</p>
+  </footer>
+</body>
+</html>
