@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Sticky Footer</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;          /* full viewport height */
+      display: flex;
+      flex-direction: column;     /* stack header, content, footer */
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    main {
+      flex: 1;                    /* take up remaining space */
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sticky Footer Layout</h1>
+  </header>
+  <main>
+    <p>This is the main content area. Add as much or as little as you want.</p>
+  </main>
+  <footer>
+    <p>Footer stays at the bottom</p>
+  </footer>
+</body>
+</html>
