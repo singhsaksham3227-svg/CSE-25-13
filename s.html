@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Header Layout</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      display: flex;                  /* flexbox activated */
+      justify-content: space-between; /* spread logo, search, actions */
+      align-items: center;            /* vertical centering */
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .search {
+      flex: 1;                        /* take available space */
+      margin: 0 20px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .actions a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .actions a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">MySite</div>
+    <div class="search">
+      <input type="text" placeholder="Search...">
+    </div>
+    <div class="actions">
+      <a href="#">Login</a>
+      <a href="#">Cart</a>
+    </div>
+  </header>
+</body>
+</html>
