@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexbox Centered Card</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;              /* flexbox activated */
+      justify-content: center;    /* center horizontally */
+      align-items: center;        /* center vertically */
+      background-color: #ececec;
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 300px;
+    }
+
+    .card h1 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .card button {
+      padding: 10px 20px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .card button:hover {
+      background-color: #1976D2;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Welcome</h1>
+    <p>This is a centered card using Flexbox.</p>
+    <button>Click Me</button>
+  </div>
+</body>
+</html>
