@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile Card</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;   /* centers card horizontally */
+      align-items: center;       /* centers card vertically */
+      height: 100vh;
+      margin: 0;
+      background: #f4f4f4;
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;    /* stack items vertically */
+      justify-content: space-between;
+      align-items: center;
+      width: 300px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Avatar with "S" instead of photo */
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #007BFF;
+      color: white;
+      font-size: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .card h2 {
+      margin: 10px 0;
+    }
+
+    .card p {
+      text-align: center;
+      color: #555;
+    }
+
+    .card .buttons {
+      display: flex;
+      flex-direction: row;       /* buttons side by side */
+      justify-content: space-around;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .card button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #007BFF;
+      color: white;
+    }
+
+    .card button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <!-- Avatar with "S" -->
+    <div class="avatar">S</div>
+
+    <h2>Saksham Singh</h2>
+    <p>Computer Science Student<br>ABES Engineering College</p>
+    <div class="buttons">
+      <button>Profile</button>
+      <button>Contact</button>
+    </div>
+  </div>
+</body>
+</html>
